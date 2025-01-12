@@ -1,56 +1,46 @@
-import React,{useState,useEffect} from "react"
-const App = () =>{
-    const [firstName,setFirstName] = useState("")
-    const [lastName,setLastName] = useState("")
-    const [fullName,setFullName] = useState("")
-    const handleSubmit = (e) =>{
-        if(firstName.trim() === "" && lastName.trim() === ""){
-            e.preventDefault(); 
-            setFullName("")
-        }else{
-            setFullName(`${firstName} ${lastName}`)
-        }
+import React, { useState } from 'react';
+
+const customDictionary = {
+  teh: "the",
+  wrok: "work",
+  fot: "for",
+  exampl: "example"
+};
+
+const App = () => {
+  const [text, setText] = useState('');
+  const [suggestion, setSuggestion] = useState('');
+
+  const handleChange = (event) => {
+    const inputText = event.target.value;
+    setText(inputText);
+    checkSpelling(inputText);
+  };
+
+  const checkSpelling = (inputText) => {
+    const words = inputText.split(' ');
+    for (let word of words) {
+      const lowerCaseWord = word.toLowerCase();
+      if (customDictionary[lowerCaseWord]) {
+        setSuggestion(`Did you mean: ${customDictionary[lowerCaseWord]}?`);
+        return; 
+      }
     }
-    return(
-        <>
-            <form>
-                <label>FirstName:</label>
-            <input 
-                type="text"
-                value={firstName}
-                onChange = {(e)=>{
-                    setFirstName(e.target.value)
-                }}
-                    required
-            />
-            <br/>
-            <label>LastName:</label>
-            <input 
-                type="text"
-                value={lastName}
-                onChange = {(e)=>{
-                    setLastName
-                        (e.target.value)
-                }}
-                required
-            />
-            <br/>
-            <button type = "submit" onClick={handleSubmit}>
-                Submit
-            </button>
-            </form>
+    setSuggestion('');
+  };
 
-            {
-                fullName && (
-                    <>
-                        <p>Full Name: {fullName}</p>
-                    </>
-                )
-            }
-            
+  return (
+    <div>
+      <textarea
+        value={text}
+        onChange={handleChange}
+        placeholder="Type your text here..."
+        rows="10"
+        cols="30"
+      />
+      {suggestion && <p>{suggestion}</p>}
+    </div>
+  );
+};
 
-            
-        </>
-    )
-}
-export default App 
+export default App;
