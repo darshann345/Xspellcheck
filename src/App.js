@@ -1,54 +1,56 @@
-import React, { useState, useEffect } from "react";
-
-const customDictionary = {
-  teh: "the",
-  wrok: "work",
-  fot: "for",
-  exampl: "example",
-};
-
-const XSpellCheck = () => {
-  const [text, setText] = useState("");
-  const [suggestion, setSuggestion] = useState("");
-
-  const checkSpelling = (inputText) => {
-    const words = inputText.split(" ");
-
-    for (const word of words) {
-      const lowerWord = word.toLowerCase();
-      if (customDictionary[lowerWord]) {
-        return `Did you mean: ${customDictionary[lowerWord]}?`
-      }
+import React,{useState,useEffect} from "react"
+const App = () =>{
+    const [firstName,setFirstName] = useState("")
+    const [lastName,setLastName] = useState("")
+    const [fullName,setFullName] = useState("")
+    const handleSubmit = (e) =>{
+        if(firstName.trim() === "" && lastName.trim() === ""){
+            e.preventDefault(); 
+            setFullName("")
+        }else{
+            setFullName(`${firstName} ${lastName}`)
+        }
     }
-    return "";
-  };
+    return(
+        <>
+            <form>
+                <label>FirstName:</label>
+            <input 
+                type="text"
+                value={firstName}
+                onChange = {(e)=>{
+                    setFirstName(e.target.value)
+                }}
+                    required
+            />
+            <br/>
+            <label>LastName:</label>
+            <input 
+                type="text"
+                value={lastName}
+                onChange = {(e)=>{
+                    setLastName
+                        (e.target.value)
+                }}
+                required
+            />
+            <br/>
+            <button type = "submit" onClick={handleSubmit}>
+                Submit
+            </button>
+            </form>
 
-  useEffect(() => {
-    if (text.trim() === "") {
-      setSuggestion("");
-    } else {
-      const foundSuggestion = checkSpelling(text);
-      setSuggestion(foundSuggestion);
-    }
-  }, [text]);
+            {
+                fullName && (
+                    <>
+                        <p>Full Name: {fullName}</p>
+                    </>
+                )
+            }
+            
 
-  const handleChange = (event) => {
-    setText(event.target.value);
-  };
-
-  return (
-    <div>
-      <h1>Spell Check and Auto-Correction</h1>
-      <textarea
-        value={text}
-        onChange={handleChange}
-        placeholder="Enter text..."
-        rows={10}
-        cols={50}
-      />
-      {suggestion && <p>{suggestion}</p>}
-    </div>
-  );
-};
-
-export default XSpellCheck;
+            
+        </>
+    )
+}
+export default App 
